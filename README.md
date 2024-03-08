@@ -4,7 +4,7 @@ These many task files are just in case
 
 # Team members
 
-Abdullah Ali\n
-Eslam El-Shaer\n
-Ahmed Ashraf\n
+- Abdullah Ali<br>
+- Eslam El-Shaer<br>
+- Ahmed Ashraf<br>
 
