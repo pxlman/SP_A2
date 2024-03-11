@@ -12,6 +12,7 @@
 #include <map>
 #include <vector>
 #include "string"
+#include <ctype.h>
 
 using namespace std;
 
@@ -162,7 +163,7 @@ void encrypt_cipher2(string & message){
         encrypted += (char) (last_letter - (ch - first_letter));
     }
     //too obvious to be explained lol :)
-    cout << "encrypted: " << encrypted;
+    cout << "encrypted: " << encrypted << endl;
 }
 
 
@@ -188,15 +189,15 @@ void decypher_cipher2(string message){
         decrypted += (char)  ((last_letter - ch) + first_letter);
 
     }
-    cout << "decrypted: " << decrypted;
+    cout << "decrypted: " << decrypted << endl;
 
 }
 
 
 // **Cipher 5 functions**
 
-const string alpha = "abcdefgkijklmnopqrstuvwxyz";
-const string zebra = "zebracdfghijklmnopqstuvwxy";
+const string alpha = "abcdefghijklmnopqrstuvwxyz";
+//const string zebra = "zebracdfghijklmnopqstuvwxy";
 int ind(char c,string text){
     for (int i = 0; i < text.size(); i++){
         if (c == text[i]){
@@ -206,21 +207,70 @@ int ind(char c,string text){
     return -1;
 }
 // A function to encrypt a text to a zerba cipher
-void encrypt_cipher5(string tt){
+string encrypt(string tt,string zebra){
     string newString = "";
     for (int i = 0; i < tt.size(); i++){
-        newString = newString + zebra[ind(tt[i],alpha)];
+        if(isalpha(tt[i])){
+            if(tt[i] > 'Z'){
+                newString += zebra[ind(tt[i],alpha)];
+            } else {
+                newString += char(zebra[ind(tt[i] + 32,alpha)] - 32);
+            }
+        } else {
+            newString += tt[i];
+        }
     }
-    cout << "Encrypted: " << newString;
+    return newString;
 }
 // A function to decrypt a zerba cipher
-void decrypt_cipher5(string tt){
+string decrypt(string tt,string zebra){
     string newString = "";
     for (int i = 0; i < tt.size(); i++){
-        newString = newString + alpha[ind(tt[i],zebra)];
+        if(isalpha(tt[i])){
+            if(tt[i] > 'Z'){
+                newString += alpha[ind(tt[i],zebra)];
+            } else {
+                newString += char(alpha[ind(tt[i] + 32,zebra)]-32);
+            }
+        } else {
+            newString += tt[i];
+        }
     }
-    cout << "decrypted: " << newString;
+    return newString;
 
+}
+bool isIn(char c, string t){
+    for(char i:t){
+        if (i == c){
+            return true;
+        }
+    }
+    return false;
+}
+string autoKeying(string key){
+    string newAlpha = key;
+    for(char c:alpha){
+        if(!isIn(c,key)){
+            newAlpha += c;
+        }
+    }
+    return newAlpha;
+}
+void toZebra(string& text){
+    string key="00000000000000000000000000000";
+    while (key.size() > ('z'-'a')){
+        cout << "Please insert the key to make a new alphabet: ";
+        cin >> key;
+    }
+    cout << "encrypted: " << encrypt(text,autoKeying(key)) << endl;
+}
+void fromZebra(string& text){
+    string key="00000000000000000000000000000";
+    while (key.size() > ('z'-'a')){
+        cout << "Please insert the key to make a new alphabet: ";
+        cin >> key;
+    }
+    cout << "decrypted: " << decrypt(text,autoKeying(key)) << endl;
 }
 
 // main function and menus
@@ -280,7 +330,7 @@ int main() {
             } else if (choice2 == "2") {
                 encrypt_cipher2(input);
             } else if (choice2 == "3") {
-                encrypt_cipher5(input);
+                toZebra(input);
             } else if (choice2 == "4") {
                 continue;
             } else if (choice2 == "5") {
@@ -300,7 +350,7 @@ int main() {
             } else if (choice3 == "2") {
                 decypher_cipher2(input);
             } else if (choice3 == "3") {
-                decrypt_cipher5(input);
+                fromZebra(input);
             } else if (choice3 == "4") {
                 continue;
             } else if (choice3 == "5") {
