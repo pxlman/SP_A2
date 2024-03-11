@@ -4,37 +4,27 @@
 #include <ctype.h>
 using namespace std;
 
-int indS(string t){
-	for (int i = 0; i < t.size(); i++)
-	{
-		if('/' == t[i]){
-			return i;
-		}
-	}
-	return -1;
+// This must convert the double value to a readable separated fraction if it can be and a fraction if can't and a whole number if it is.
+string decToFrac(double num){
+	string fractionForm;
+	// your code here...
+	return fractionForm;
 }
 
-// auto cmatchToArr(std::cmatch &match){
-// 	string arr[match.size()];
-// 	for (int i = 0; i < match.size(); i++)
-// 	{
-// 		arr[i] = match.str(i);
-// 	}
-// 	return arr;
-// }
-
 int main(){
+	// The regex of the whole valid line
 	regex lineRegex("(-?[0-9]*[+-/*]?-?[0-9]*) ([+-/*]) (-?[0-9]*[+-/*]?-?[0-9]*)");
+	// The regax of each sub regex in the line which represent a rational part
 	regex rational("(-?[0-9]*)([/]?)(-?[0-9]*)");
-	// regex midOperation(" [*/+-] ");
-	regex operation("[-+/*]");
+	// A number which can be +ve of -ve
 	regex number("(-?[1-9][0-9]*)");
+	// holds the rationals as a string and the operation at from 1-3 indices
 	smatch matchingRationals;
+	// The text he will input
 	string text;
-	text = "-123/42 * 12/3";
-
-	int num1,num2;
-	char mOperation;
+	getline(cin,text);
+	// text = "-123/42 * 12/3";
+	// The final number as a decimal value may be +ve of -ve
 	double finalNum;
 
 	if (regex_search(text, matchingRationals, lineRegex)){
@@ -44,17 +34,23 @@ int main(){
 		string mainOperation = matchingRationals[2];
 		// Preparing the to rational values'variables
 		double nums[2];
+		// A for loop looping on each rational and calculating it's value
 		for (int i = 0; i < 2; i++)
 		{
 			/* code */
+			// holds each number in the rational
 			smatch matchingNumbers;
+			// case of it's a rational
 			if(regex_search(minForm[i],matchingNumbers,rational)){
 				nums[i] = (double)stoi(matchingNumbers[1]) / stoi(matchingNumbers[3]);
-			} else if (regex_match(minForm[i],number)){
+			}
+			// case of it's a whole number as in docs of the dc.
+			else if (regex_match(minForm[i],number)){
 				nums[i] = stoi(minForm[i]);
 			}
 			// cout << nums[i] << " \n";
 		}
+		// Calculating the final number value
 		if (mainOperation == "/"){
 			finalNum = nums[0] / nums[1];
 		}
@@ -69,7 +65,9 @@ int main(){
 		}
 		cout << finalNum;
 
-	} else {
+	}
+	// Case of invalid input
+	else {
 		cout << "Please insert a valid calculation";
 	}
 
