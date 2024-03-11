@@ -13,7 +13,7 @@ string decToFrac(double num){
 
 int main(){
 	// The regex of the whole valid line
-	regex lineRegex("(-?[0-9]*[+-/*]?-?[0-9]*) ([+-/*]) (-?[0-9]*[+-/*]?-?[0-9]*)");
+	regex lineRegex("(-?[0-9]*[+-/*]?-?[0-9]*) ([+-/*]) (-?[0-9]*[+-/*]?-?[1-9][0-9]*)");
 	// The regax of each sub regex in the line which represent a rational part
 	regex rational("(-?[0-9]*)([/]?)(-?[1-9][0-9]*)");
 	// A number which can be +ve of -ve
@@ -42,7 +42,7 @@ int main(){
 			smatch matchingNumbers;
 			// case of it's a rational
 			if(regex_search(minForm[i],matchingNumbers,rational)){
-				if(stoi(matchingNumbers[3]) == 0){
+				if(stoi(matchingNumbers[3]) == 0.000){
 					cout << "Can't divide by zero";
 					return 1;
 				} else {
