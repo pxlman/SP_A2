@@ -1,4 +1,5 @@
-// File: potato
+// FCAI – Structured Programming – 2024 - Assignment 2
+// File:  CS112_A2_T2_S21,22_20230227_20230005_20230062.cpp
 // Purpose: Encrypt and Decrypt programs
 // section number : All of us in S21,22
 // Author,ID,Emails and Parts done:
@@ -279,7 +280,7 @@ void show_menu1() {
     cout << "please choose an  option\n";
     cout << "1) Cipher a message\n";
     cout << "2) Decipher a message\n";
-    cout << "3) Exit";
+    cout << "3) Exit\n";
 }
 
 void show_menu2(){
@@ -331,6 +332,7 @@ int main() {
                 encrypt_cipher2(input);
             } else if (choice2 == "3") {
                 toZebra(input);
+                cin.ignore();
             } else if (choice2 == "4") {
                 continue;
             } else if (choice2 == "5") {
@@ -351,6 +353,7 @@ int main() {
                 decypher_cipher2(input);
             } else if (choice3 == "3") {
                 fromZebra(input);
+                cin.ignore();
             } else if (choice3 == "4") {
                 continue;
             } else if (choice3 == "5") {
@@ -366,7 +369,7 @@ int main() {
             cout << "Please choose a valid option\n";
         }
 
-        cout << "\nPress Enter to continue...";
+        cout << "\nPress Enter to continue...\n";
         cin.get();
     }
 
