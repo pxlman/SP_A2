@@ -15,7 +15,7 @@ int main(){
 	// The regex of the whole valid line
 	regex lineRegex("(-?[0-9]*[+-/*]?-?[0-9]*) ([+-/*]) (-?[0-9]*[+-/*]?-?[0-9]*)");
 	// The regax of each sub regex in the line which represent a rational part
-	regex rational("(-?[0-9]*)([/]?)(-?[0-9]*)");
+	regex rational("(-?[0-9]*)([/]?)(-?[1-9][0-9]*)");
 	// A number which can be +ve of -ve
 	regex number("(-?[1-9][0-9]*)");
 	// holds the rationals as a string and the operation at from 1-3 indices
@@ -42,7 +42,12 @@ int main(){
 			smatch matchingNumbers;
 			// case of it's a rational
 			if(regex_search(minForm[i],matchingNumbers,rational)){
-				nums[i] = (double)stoi(matchingNumbers[1]) / stoi(matchingNumbers[3]);
+				if(stoi(matchingNumbers[3]) == 0){
+					cout << "Can't divide by zero";
+					return 1;
+				} else {
+					nums[i] = (double)stoi(matchingNumbers[1]) / stoi(matchingNumbers[3]);
+				}
 			}
 			// case of it's a whole number as in docs of the dc.
 			else if (regex_match(minForm[i],number)){
@@ -52,7 +57,12 @@ int main(){
 		}
 		// Calculating the final number value
 		if (mainOperation == "/"){
-			finalNum = nums[0] / nums[1];
+			if(nums[1] == 0){
+				cout << "Can't divide by zero";
+				return 1;
+			} else {
+				finalNum = nums[0] / nums[1];
+			}
 		}
 		else if (mainOperation == "*"){
 			finalNum = nums[0] * nums[1];
