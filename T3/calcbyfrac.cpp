@@ -17,11 +17,16 @@ long long gcd(long long a, long long b) {
 
 // Function to simplify a fraction
 void simplifyFraction(long long& numerator, long long& denominator) {
+    // Check if negative
+    bool isNegative = (numerator < 0) != (denominator < 0);
     // Find the greatest common divisor
-    long long commonDivisor = gcd(numerator, denominator);
+    long long commonDivisor = gcd(abs(numerator), denominator);
     // Divide both numerator and denominator by the common divisor
-    numerator /= commonDivisor;
+    numerator = abs(numerator) / commonDivisor;
     denominator /= commonDivisor;
+    // If the numerator was negative, assign the sign to the numerator
+    if (isNegative)
+        numerator *= -1;
 }
 
 // Function to add two fractions
@@ -38,7 +43,7 @@ void addFractions(long long& num1, long long& den1, long long& num2, long long& 
 
 // Function to subtract two fractions
 void subtractFractions(long long& num1, long long& den1, long long& num2, long long& den2) {
-    // cross multiplication
+    // Perform subtraction of fractions
     long long num = num1 * den2 - num2 * den1;
     long long den = den1 * den2;
     // Simplify the result
