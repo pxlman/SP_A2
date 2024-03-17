@@ -95,6 +95,25 @@ void separate_fractions(const string& fractionStr, long long& numerator, long lo
         denominator = 1; // Denominator defaults to 1
     }
 }
+bool isValidInput(const string& input) {
+    // Check for two consecutive '+' signs
+    for (size_t i = 0; i < input.size() - 1; ++i) {
+        if (input[i] == '+' && input[i + 1] == '+') {
+            return false;
+        }
+    }
+
+    // Check for division without space
+    if(input[0] == '/') return false;
+    for (int i = 0; i < input.size() - 2; ++i) {
+        if (input[i] == '/' && (input[i-2] == '/' || input[i + 2] == '/')) {
+            return false;
+        }
+
+    }
+
+    return true;
+}
 
 int main() {
     while (true) {
@@ -105,8 +124,14 @@ int main() {
         if (input == "exit")
             break;
 
+        if (!isValidInput(input)) {
+            cout << "Invalid input format" << endl;
+            continue;
+        }
+
+
         // Regular expression pattern to match fractions and operations
-        regex pattern("(-?\\d+/\\d+|-?\\d+)\\s*([-+*/])\\s*(-?\\d+/\\d+|-?\\d+)");
+        regex pattern("([+-]?\\d+/\\d+|[+-]?\\d+)\\s*([-+*/])\\s*([+-]?\\d+/\\d+|[+-]?\\d+)");
         smatch matches;
 
         // Check if the input matches the pattern
