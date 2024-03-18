@@ -4,14 +4,10 @@
 //File name: Rail_fence
 #include <bits/stdc++.h>
 
-#define ll long long
-#define getvec int n; cin >> n; vector<int> v(n); for(int i = 0; i < n; ++i) cin >> v[i];
-#define space ' '
-#define enter '\n'
-#define islam ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
 using namespace std;
 
+//because we refuse special chars
 bool isvalidmessage(string message){
 
     for(char ch : message)
@@ -41,7 +37,7 @@ string rail_fence_cipher(string message){
         for (int j = 0; j < message.size(); ++j)
             matrix[i].push_back('.');
 
-    //we fill the matrix
+    //we fill the matrix in diagonal
     bool going_down{true};
     for (int x = 0, y = 0; x < message.size(); ++x) {
         matrix[y][x] = message[x];
@@ -60,6 +56,7 @@ string rail_fence_cipher(string message){
             y--;
     }
 
+    //adding the characters to the encrypted string
     string encrypted;
     for (int i = 0; i < 4; ++i)
         for (int j = 0; j < message.size(); ++j)

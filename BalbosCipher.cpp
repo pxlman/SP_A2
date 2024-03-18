@@ -4,11 +4,6 @@
 //File name: BalbosCipher
 #include <bits/stdc++.h>
 
-#define ll long long
-#define getvec int n; cin >> n; vector<int> v(n); for(int i = 0; i < n; ++i) cin >> v[i];
-#define space ' '
-#define enter '\n'
-
 
 using namespace std;
 
@@ -72,12 +67,14 @@ string get_chars_number(char ch, vector<vector<char>> matrix){
 
 void take_input_polybius(string message, bool cipher){
 
+    //in case we want to cipher we check if every char is valid (alphabetic)
     if (cipher){
         while (not isvalidmessage(message)){
             cout << "invalid input, please grow up  ";
             getline(cin, message);
         }
     }
+    //in case of decipher we check if all are numbers
     else{
         while (not isvalid_encrypted(message)){
             cout << "invalid input, please grow up  ";
@@ -89,18 +86,21 @@ void take_input_polybius(string message, bool cipher){
 
 
 string polybius_cipher(string message, vector<vector<char>> matrix){
+    //looping on every char to encrypt it
     string encrypted;
     for (char ch : message){
         if (ch == ' '){
             encrypted += ' ';
             continue;
         }
+        //all are upper case according to problem's definition
         ch = toupper(ch);
         encrypted += get_chars_number(ch, matrix);
     }
     return encrypted;
 }
 
+//a function to seperate every word and put them in a vector
 vector<string> get_words(string sentence){
 
     vector<string> words;
@@ -137,6 +137,7 @@ int search_for_index(char x, vector<vector<char>> matrix, char axis){
 
 string polybius_decipher(string encrypted, string key, vector<vector<char>> matrix){
 
+    //initializing variables
     string decrypted;
     vector<string> words;
     words = get_words(encrypted);
@@ -147,7 +148,9 @@ string polybius_decipher(string encrypted, string key, vector<vector<char>> matr
             int index1 = search_for_index(word[i], matrix, 'y');
             int index2 = search_for_index(word[i + 1], matrix, 'x');
 
+            //we access the matrix using the indexes to get the cahr
             decrypted += matrix[index1][index2];
+            //we skip the second number because we already used it
             i++;
         }
         decrypted += ' ';
@@ -165,7 +168,7 @@ int main() {
     getline(cin, message);
 
     //this function takes 1 if you want to cipher and takes 0 if you want to decipher (as the second parametar)
-    take_input_polybius(message, 1);
+    take_input_polybius(message, 0);
 
     //declaring our matrix with initial values 1 2 3 4 5
     vector<vector<char>> matrix(6);
@@ -192,7 +195,7 @@ int main() {
     }
 
 
-    cout << polybius_cipher(message, matrix);
+    cout << polybius_decipher(message, key, matrix);
 
 }
 
