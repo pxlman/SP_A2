@@ -17,17 +17,31 @@ bool isvalidmessage(string message){
 
 }
 
-string takeinput1(string message){
+string take_input_alphabetic(){
 
-    while(not isvalidmessage(message)){
-        cout << "only alphabetic letters, if you don't like it, don't use my program";
+    cout << "enter the message:  " << endl;
+    string message;
+    getline(cin, message);
+
+    //in case we want to cipher we check if every char is valid (alphabetic)
+
+    while (not isvalidmessage(message)) {
+        cout << "invalid input, please grow up:  ";
         getline(cin, message);
     }
     return message;
+
 }
 
 
-string rail_fence_cipher(string message){
+string rail_fence_cipher(){
+
+    string input_message = take_input_alphabetic();
+    string message;
+    for (char ch : input_message){
+        if (ch != ' ')
+            message += ch;
+    }
 
     //we fix the key to 4
     vector<vector<char>> matrix(4);
@@ -66,7 +80,15 @@ string rail_fence_cipher(string message){
 
 }
 
-string rail_fence_decipher(string message){
+string rail_fence_decipher(){
+
+    string input_message = take_input_alphabetic();
+    string message;
+    for (char ch : input_message){
+        if (ch != ' ')
+            message += ch;
+    }
+
 
     vector<vector<char>> matrix(4);
 
@@ -130,19 +152,7 @@ string rail_fence_decipher(string message){
 
 int main() {
 
-    //taking input
-    string input_message;
-    getline(cin, input_message);
-    input_message = takeinput1(input_message);
-
-    //removing the spaces
-    string message;
-    for (char ch : input_message){
-        if (ch != ' ')
-            message += ch;
-    }
-
-    cout << rail_fence_decipher(message);
-//    cout << rail_fence_cipher(message);
+    cout << rail_fence_decipher();
+//    cout << rail_fence_cipher();
 
 }

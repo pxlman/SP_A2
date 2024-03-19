@@ -65,9 +65,9 @@ string get_chars_number(char ch, vector<vector<char>> matrix){
 
 
 //this function takes 1 if you want to cipher and takes 0 if you want to decipher (as the second parametar)
-string take_input_polybius(bool cipher){
+string take_input_alphabetic(bool cipher){
 
-    cout << "enter the message you want to encrypt:  ";
+    cout << "enter the message:  " << endl;
     string message;
     getline(cin, message);
 
@@ -129,10 +129,10 @@ vector<string> get_words(string sentence){
 void polybius_cipher(){
     vector<vector<char>> matrix = {{'0', '1', '2', '3', '4', '5'}, {'1', 'A', 'B', 'C', 'D', 'E'}, {'2','F', 'G', 'H', 'I', 'K'}, {'3', 'L', 'M', 'N', 'O', 'P'}, {'4', 'Q', 'R', 'S', 'T', 'U'}, {'5','V', 'W', 'X', 'Y', 'Z'}};
 
-    string message = take_input_polybius(true);
+    string message = take_input_alphabetic(true);
 
     //getting the key
-    cout << "enter the key (write a number and press enter then the next number)  : ";
+    cout << "enter the key (write a number and press enter then the next number)  : " << '\n';
     for (int i = 1; i < 6; ++i) {
         string x;
         cin >> x;
@@ -166,16 +166,16 @@ void polybius_cipher(){
 void polybius_decipher(){
 
     vector<vector<char>> matrix = {{'0', '1', '2', '3', '4', '5'}, {'1', 'A', 'B', 'C', 'D', 'E'}, {'2','F', 'G', 'H', 'I', 'K'}, {'3', 'L', 'M', 'N', 'O', 'P'}, {'4', 'Q', 'R', 'S', 'T', 'U'}, {'5','V', 'W', 'X', 'Y', 'Z'}};
-    string encrypted = take_input_polybius(false);
+    string encrypted = take_input_alphabetic(false);
 
     //getting the key
     string key;
-    cout << "enter the key (write a number and press enter then the next number)  : ";
+    cout << "enter the key (write a number and press enter then the next number)  : " << '\n';
     for (int i = 1; i < 6; ++i) {
         string x;
         cin >> x;
         while(not isvalidchar(x)){
-            cout << "what the hell is wrong with you? just enter a goddamn number\n is it too hard for such an ignorant person to understand that you should enter a number?   ";
+            cout << "what the hell is wrong with you? just enter a goddamn number\n is it too hard for such an ignorant person to understand that you should enter a number?   " << endl;
             cin >> x;
         }
         key += x;
@@ -211,7 +211,6 @@ void polybius_decipher(){
 
 int main() {
     polybius_cipher();
-
 }
 
 //24 31345115 13 35314543 35314543

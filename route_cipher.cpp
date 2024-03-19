@@ -24,88 +24,181 @@ using namespace std;
  *
  * */
 
+bool isvalidmessage(string message){
 
+    for(char ch : message)
+        if (ch != ' ' && not isalpha(ch))
+            return false;
+    return true;
 
+}
 
-string route_cipher(int height, int width, vector<vector<char>> matrix){
+string take_input_alphabetic(){
 
-    //intializing variables
-    //steps is the number of encryption steps we did so far so that if it reaches the num of elements, we are done
-    int steps{0};
-    string encrypted;
-    //note that it is just an iterator that increments 1 every iteration
-    int it{0};
-    int n_elements{height * width};
+    cout << "enter the message you want to encrypt:  " << endl;
+    string message;
+    getline(cin, message);
 
-    while (true){
-
-        //a loop for going DOWN starting from up right including the element down
-        for (int i = it; i < height - it - 1; ++i) {
-            encrypted += matrix[i][width - it - 1];
-            steps++;
-        }
-        //we need to check this condition after each loop
-        if (steps >= n_elements)
-            break;
-
-        //a loop for going LEFT
-        //and it starts from what the last loop has ended
-        //including the element in the very left side
-        for (int i = width - it - 1; i >= it; --i) {
-            encrypted += matrix[height - it - 1][i];
-            steps++;
-        }
-        if (steps >= n_elements)
-            break;
-
-
-        //another loop for going UP including the element at the top
-        for (int i = height - 2 - it; i >= it; --i) {
-            encrypted += matrix[i][it];
-            steps++;
-        }
-        if (steps >= n_elements)
-            break;
-
-
-        //and again another loop for going right including the element on the very right side
-        for (int i = it + 1; i < width - 1 - it; ++i) {
-            encrypted += matrix[it][i];
-            steps++;
-        }
-        if (steps >= n_elements)
-            break;
-
-        it++;
+    //in case we want to cipher we check if every char is valid (alphabetic)
+    while (not isvalidmessage(message)){
+        cout << "invalid input, please grow up:  ";
+        getline(cin, message);
     }
-    return encrypted;
+    return message;
 
 }
 
 
-//we do the same as function cipher
-string route_decipher(int height, int width, string encrypted){
 
-    //intializing the matrix with stars
-    vector<vector<char>> matrix(height);
-    for (int i = 0; i <height; ++i) {
-        for (int j = 0; j < width; ++j) {
-            matrix[i].push_back('*');
+
+string route_cipher(){
+
+
+    cout << "Welcome to route cipher, please enter your message: ";
+    //getting the message
+    string tempmessage = take_input_alphabetic();
+    string message;
+    //transforming into upper
+    for (char ch : tempmessage)
+        if (ch != ' ')
+            message += toupper(ch);
+
+    //getting the key
+    string tempkey;
+    cout << "please enter the secret key: ";
+    cin >> tempkey;
+    while (tempkey.size() != 1 or not isdigit(tempkey[0])){
+        cout << "not a valid key, you stupid user";
+        cin >> tempkey;
+    }
+    int key = stoi(tempkey);
+    //we get the heigth of the matrix
+    int n_rows = message.size() / key;
+    //we handel the case that the matrix has empty slots
+    if (message.size() % key != 0)
+        n_rows = (message.size() / key) + 1;
+
+    int n_columns = key;
+
+
+    vector<vector<char>> matrix(n_rows);
+    //we use this function to intialize all elements to X
+    for (int i = 0; i <n_rows; ++i)
+        for (int j = 0; j <n_columns; ++j)
+            matrix[i].push_back('X');
+
+    for (int i = 0, k = 0; i < n_rows; ++i) {
+        for (int j = 0; j < n_columns; ++j) {
+            if (k >= message.size())
+                break;
+            matrix[i][j] = message[k++];
         }
     }
 
+    //we use this dummy variable that increments 1 every loop
+    int dummy{0};
+    int steps{0};
+    string encrypted;
+    while(true){
+
+        //loop for going down
+        for (int i = 0; i < n_rows; ++i) {
+            if(matrix[i][n_columns - 1 - dummy] == '*')
+                continue;
+            encrypted += matrix[i][n_columns - 1 - dummy];
+            matrix[i][n_columns - 1 - dummy] = '*';
+            steps++;
+        }
+        if (steps >= n_rows * n_columns)
+            break;
+
+        //loop for going left
+        for (int i = n_columns - 1; i >= 0; --i) {
+            if (matrix[n_rows - 1 - dummy][i] == '*')
+                continue;
+            encrypted += matrix[n_rows - 1 - dummy][i];
+            matrix[n_rows - 1 - dummy][i] = '*';
+            steps++;
+        }
+        if (steps >= n_rows * n_columns)
+            break;
+
+        //loop for going up
+        for (int i = n_rows - 1; i >= 0; --i) {
+            if (matrix[i][dummy] == '*')
+                continue;
+            encrypted += matrix[i][dummy];
+            matrix[i][dummy] = '*';
+            steps++;
+        }
+        if (steps >= n_rows * n_columns)
+            break;
+
+        //loop for going right
+        for (int i = 0; i < n_columns; ++i) {
+            if (matrix[dummy][i] == '*')
+                continue;
+            encrypted += matrix[dummy][i];
+            matrix[dummy][i] = '*';
+            steps++;
+        }
+        if (steps >= n_rows * n_columns)
+            break;
+
+        dummy++;
+    }
+
+    return encrypted;
+}
+
+
+//we do the same as function cipher
+string route_decipher(){
+
+    string tempmessage = take_input_alphabetic();
+    string encrypted;
+    //transforming into upper
+    for (char ch : tempmessage)
+        if (ch != ' ')
+            encrypted += toupper(ch);
+
+    //getting the key
+    string tempkey;
+    cout << "please enter the secret key: ";
+    cin >> tempkey;
+    while (tempkey.size() != 1 or not isdigit(tempkey[0])){
+        cout << "not a valid key, you stupid user";
+        cin >> tempkey;
+    }
+    int key = stoi(tempkey);
+    //we get the heigth of the matrix
+    int height = encrypted.size() / key;
+    //we handel the case that the matrix has empty slots
+    if (encrypted.size() % key != 0)
+        height = (encrypted.size() / key) + 1;
+
+    int width = key;
+
+
+    //intializing the matrix with stars
+    vector<vector<char>> matrix(height);
+    for (int i = 0; i <height; ++i)
+        for (int j = 0; j < width; ++j)
+            matrix[i].push_back('*');
+
+
     int next{0};
-    int it{0};
+    int dummy{0};
 
     while(true){
 
         //loop for going down
-        for (int i = it; i < height; ++i) {
+        for (int i = dummy; i < height; ++i) {
             // if the current square is already filled then stop here please
-            if (matrix[i][width - 1 - it] != '*'){
+            if (matrix[i][width - 1 - dummy] != '*'){
                 break;
             }
-            matrix[i][width - 1 - it] = encrypted[next++];
+            matrix[i][width - 1 - dummy] = encrypted[next++];
         }
         if (next >= encrypted.size())
             break;
@@ -113,12 +206,12 @@ string route_decipher(int height, int width, string encrypted){
 
 
         //loop for going left
-        for (int i = width - 2 - it; i >= 0 ; --i) {
-            if (matrix[height - 1 - it][i] != '*'){
+        for (int i = width - 2 - dummy; i >= 0 ; --i) {
+            if (matrix[height - 1 - dummy][i] != '*'){
 
                 break;
             }
-            matrix[height - 1 - it][i] = encrypted[next++];
+            matrix[height - 1 - dummy][i] = encrypted[next++];
         }
 
         if (next >= encrypted.size())
@@ -126,29 +219,29 @@ string route_decipher(int height, int width, string encrypted){
 
 
         //loop for going up
-        for (int i = height - 2 - it; i >= 0 ; --i) {
-            if (matrix[i][it] != '*'){
+        for (int i = height - 2 - dummy; i >= 0 ; --i) {
+            if (matrix[i][dummy] != '*'){
 
                 break;
             }
-            matrix[i][it] = encrypted[next++];
+            matrix[i][dummy] = encrypted[next++];
         }
         if (next >= encrypted.size())
             break;
 
 
         //loop for going right
-        for (int i = it + 1; i < width; ++i) {
-            if (matrix[it][i] != '*'){
+        for (int i = dummy + 1; i < width; ++i) {
+            if (matrix[dummy][i] != '*'){
 
                 break;
             }
-            matrix[it][i] = encrypted[next++];
+            matrix[dummy][i] = encrypted[next++];
         }
         if (next >= encrypted.size())
             break;
 
-        it++;
+        dummy++;
     }
 
 
@@ -163,66 +256,9 @@ string route_decipher(int height, int width, string encrypted){
     return decrypted;
 }
 
-bool isvalidmessage(string message){
-
-    for(char ch : message)
-        if (ch != ' ' && not isalpha(ch))
-            return false;
-    return true;
-
-}
-
-
 int main() {
 
-    //taking input and declaring variables
-    cout << "Welcome to route cipher, please enter your message: ";
-    string tempmessage;
-    getline(cin, tempmessage);
-    while(not isvalidmessage(tempmessage)){
-        cout << "only alphabets are allowed";
-        getline(cin, tempmessage);
-    }
+    cout << route_decipher();
 
-    //transfering the message to upper
-    string message;
-    for (char ch : tempmessage)
-        if (ch != ' ')
-            message += toupper(ch);
-
-    string tempkey;
-    cout << "please enter the secret key: ";
-    cin >> tempkey;
-    while (tempkey.size() != 1 or not isdigit(tempkey[0])){
-        cout << "not a valid key, you stupid user";
-        cin >> tempkey;
-    }
-    int key = stoi(tempkey);
-    //we get the heigth of the matrix
-    int height = message.size() / key;
-    //we handel the case that the matrix has empty slots
-    if (message.size() % key != 0)
-        height = (message.size() / key) + 1;
-
-    int width = key;
-    vector<vector<char>> matrix(height);
-
-    //we use this function to intialize all elements to X
-    for (int i = 0; i <height; ++i) {
-        for (int j = 0; j <width; ++j) {
-            matrix[i].push_back('X');
-        }
-    }
-
-    //filling our matrix with characters
-    for (int i = 0, k = 0; i < height; ++i) {
-        for (int j = 0; j < width; ++j, ++k) {
-            if (k >= message.size())
-                break;
-            matrix[i][j] = message[k];
-        }
-    }
-
-    cout << route_decipher(height, width, message);
 
 }
